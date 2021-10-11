@@ -62,7 +62,7 @@ const checkLogin = async (req, res, next) => {
   try {
     const { email, password } = req.body
     console.log(email, password, 'From check login')
-    const user = await User.checkCredentials(email, password)
+    const user = await UserModel.checkCredentials(email, password)
 
     if (user) {
    
@@ -79,11 +79,12 @@ const checkLogin = async (req, res, next) => {
 }
 
 const users = {
-  create: create,
-  getAll: getAll,
-  getSingle: getSingle,
-  update: update,
-  deleteSingle: deleteSingle,
+getUsers:getUsers,
+getUserMe:getUserMe,
+updateUserMe:updateUserMe,
+deleteUserMe:deleteUserMe,
+uploadAvatar:uploadAvatar,
+getOneUser:getOneUser,
   Login:checkLogin,
 }
 
