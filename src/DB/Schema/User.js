@@ -4,19 +4,19 @@ import bcrypt from 'bcrypt'
 const { Schema, model } = mongoose
 
 const userSchema = new Schema(
-    {
-        name: { type: String, required: true },
-        email: { type: String, unique: true, required: true },
-        password: { type: String },
-        bio: { type: String },
-        // refreshToken: { type: String },    //optional
-        avatar: {
-          type: String,
-          default: "https://ui-avatars.com/api/?name=Unnamed+User",
-        },
-      },
-      { timestamps: true }
-    );
+  {
+    name: { type: String, required: true },
+    email: { type: String, unique: true, required: true },
+    password: { type: String },
+    bio: { type: String },
+    googleId: { type: String },
+    avatar: {
+      type: String,
+      default: "https://ui-avatars.com/api/?name=Unnamed+User",
+    },
+  },
+  { timestamps: true }
+);
 
 
 // You can create custom methods using statics or static below are 2 examples
@@ -28,10 +28,10 @@ const userSchema = new Schema(
 // })
 
 userSchema.statics.checkCredentials = async function (email, password) {
-  const user = await this.findOne({ email }) 
+  const user = await this.findOne({ email })
 
   if (user) {
-   
+
     const isMatch = await bcrypt.compare(password, user.password)
 
     if (isMatch) return user
@@ -43,8 +43,8 @@ userSchema.statics.checkCredentials = async function (email, password) {
 
 // Custom Hooks actions that will be performed everytime the action ex.: "save", findOneAndUpdate happens with the Document
 userSchema.pre("save", async function (next) {
-  this.avatar = `https://ui-avatars.com/api/?name=${this.name}+${this.surname}`;
-  
+  this.avatar = `https://ui-avatars.com/api/?name=${this.name}`;
+
   if (this.isModified("password")) {
     this.password = await bcrypt.hash(this.password, 12)
   }

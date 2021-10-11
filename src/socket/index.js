@@ -10,7 +10,7 @@ export const connectSocket = (server) => {
         const httpServer = createServer(server)
         const io = new Server(httpServer, { allowEIO3: true })
         httpServer.listen(process.env.PORT, () => {
-            console.log("Server listening on port 3003")
+            console.log(`Server listening on port ${process.env.PORT}`)
         })
 
 
