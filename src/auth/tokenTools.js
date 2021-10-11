@@ -6,7 +6,7 @@ const generateJWT = (userId) =>
     JWT.sign(
       userId,
       process.env.JWT_SECRET,
-      { expiresIn: "7 days" },
+      { expiresIn: "2 days" },
       (err, token) => {
         if (err) {
           reject(err);
