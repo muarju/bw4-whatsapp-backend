@@ -1,0 +1,37 @@
+{
+  "name": "bw4-whatsapp-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
+    "watch": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watchAll",
+    "dev": "nodemon -r dotenv/config ./src/server/index.js",
+    "start": "node ./src/server/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "dotenv": "^10.0.0",
+    "jest": "^27.2.4",
+    "nodemon": "^2.0.13",
+    "supertest": "^6.1.6"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cloudinary": "^1.27.1",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "express": "^4.17.1",
+    "express-validator": "^6.12.2",
+    "http-errors": "^1.8.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.0.9",
+    "multer": "^1.4.3",
+    "passport": "^0.5.0",
+    "passport-google-oauth20": "^2.0.0",
+    "socket.io": "^4.2.0"
+  }
+}

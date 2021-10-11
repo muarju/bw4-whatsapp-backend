@@ -1,0 +1,14 @@
+PORT
+
+===== DB CONNECTIONS ======
+MONGO_DEV_URL
+MONGO_PROD_URL
+MONGO_TEST_URL
+
+CLOUDINARY_URL
+
+
+======= For deployment trustable origins =======
+FE_DEV_TRUST_URL
+FE_PROD_TRUST_URL
+FE_PROD_TRUST_URL_2
