@@ -50,20 +50,20 @@ const deleteUserMe= async (req, res, next) => {
   }
 }
 
-const uploadAvatar = (multer({storage:saveToUser}).single('avatar'),async(req, res, next) => {
+const uploadAvatar = async(req, res, next) => {
   try {
     const imageUrl = req.file.path;
    
     const updateUser = await UserModel.findByIdAndUpdate(
       req.user._id,
-      { image: imageUrl },
+      { avatar: imageUrl },
       { new: true }
     )
     res.status(201).send(updateUser)
   } catch (error) {
     next(error)
   }
-})
+}
 
 const getOneUser = async (req, res, next) => {
   try {
