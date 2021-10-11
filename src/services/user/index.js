@@ -6,7 +6,8 @@ const router = express.Router()
 
 router
   .route("/")
-  .get(users.getUsers)
+  .get(users.getAll)
+  .get(users.getOneUser)
 
 router
   .route("/register")

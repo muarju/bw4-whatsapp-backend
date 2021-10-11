@@ -1,6 +1,7 @@
 import UserModel from '../../DB/Schema/User.js'
 import { saveToUser } from '../../lib/cloudinaryTool.js'
 import multer from 'multer'
+import {generateJWTToken} from '../../auth/tokenTools.js'
 
 const getUsers = async (req, res, next) => {
   try {
@@ -10,6 +11,20 @@ const getUsers = async (req, res, next) => {
     next(error)
   }
 }
+
+const create = async (req, res, next) => {
+  try {
+    const newUser = new UserModel(req.body)
+    const user = await newUser.save({new: true})
+    const token = await generateJWTToken(user)
+    res.status(200).send(token)
+  } catch (error) {
+    res.status(500)
+    console.log(error)
+    next(error)
+  }
+}
+
 const getUserMe = async (req, res, next) => {
   try {
     res.send(req.user)
@@ -61,14 +76,11 @@ const getOneUser = async (req, res, next) => {
 const checkLogin = async (req, res, next) => {
   try {
     const { email, password } = req.body
-    console.log(email, password, 'From check login')
-    const user = await User.checkCredentials(email, password)
+    const user = await UserModel.checkCredentials(email, password)
 
     if (user) {
-   
-    
-
-      res.send()
+      const token = await generateJWTToken(user)
+      res.status(200).send(token)
     } else {
   
       next(createHttpError(401, "Credentials are not ok!"))
@@ -80,10 +92,12 @@ const checkLogin = async (req, res, next) => {
 
 const users = {
   create: create,
-  getAll: getAll,
-  getSingle: getSingle,
-  update: update,
-  deleteSingle: deleteSingle,
+  getAll: getUsers,
+  getOneUser:getOneUser,
+  getUserMe: getUserMe,
+  updateUserMe: updateUserMe,
+  deleteUserMe: deleteUserMe,
+  uploadAvatar:uploadAvatar,
   Login:checkLogin,
 }
 
