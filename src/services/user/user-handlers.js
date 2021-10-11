@@ -1,6 +1,5 @@
 import UserModel from '../../DB/Schema/User.js'
-
-
+import {generateJWTToken} from '../../auth/tokenTools.js'
 
 const getUsers = async (req, res, next) => {
   try {
@@ -26,7 +25,8 @@ const create = async (req, res, next) => {
 
 const getUserMe = async (req, res, next) => {
   try {
-    res.send(req.user)
+    console.log(req.user)
+    await res.send(req.user)
   } catch (error) {
     next(error)
   }
@@ -43,7 +43,7 @@ const updateUserMe = async (req, res, next) => {
 const deleteUserMe= async (req, res, next) => {
   try {
     const updateUser = await UserModel.findByIdAndDelete(req.user._id)
-    res.send(updateUser.id,"has been deleted successfully")
+    res.send("deleted successfully")
   } catch (error) {
     next(error)
   }

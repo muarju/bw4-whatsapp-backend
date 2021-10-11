@@ -9,29 +9,29 @@ const router = express.Router()
 router
   .route("/")
   .get(users.getAll)
-  .get(users.getOneUser)
 
-router
-  .route("/:userId")
-  .get(users.getOneUser)
 
-router
+  
+  router
   .route("/register")
   .post(users.create)
-router
-.route("/login")
-.post(users.Login)
+  router
+  .route("/login")
+  .post(users.Login)
   
-router
-  .route("/me",tokenMiddleware)
-  .get(users.getUserMe)
-  .put(users.updateUserMe)
-  .delete(users.deleteUserMe)
-
-router
+  router
+  .route("/me")
+  .get(tokenMiddleware,users.getUserMe)
+  .put(tokenMiddleware,users.updateUserMe)
+  .delete(tokenMiddleware,users.deleteUserMe)
+  
+  router
   .route("me/avatar",tokenMiddleware,multer({storage:saveToUser}).single('avatar'))
   .post(users.uploadAvatar)
-
+  
+  router
+    .route("/:userId")
+    .get(users.getOneUser)
 
 //routes for google logins
 // authorsRouter.get("/googleLogin", passport.authenticate("google", { scope: ["profile", "email"] }))
