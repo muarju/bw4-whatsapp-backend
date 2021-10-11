@@ -7,8 +7,13 @@ import { saveToUser } from "../../lib/cloudinaryTool.js"
 const router = express.Router()
 
 router
-  .route("/",tokenMiddleware)
-  .get(users.getUsers)
+  .route("/")
+  .get(users.getAll)
+  .get(users.getOneUser)
+
+router
+  .route("/:userId")
+  .get(users.getOneUser)
 
 router
   .route("/register")
