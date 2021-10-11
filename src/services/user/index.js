@@ -9,11 +9,6 @@ const router = express.Router()
 router
   .route("/")
   .get(users.getAll)
-  .get(users.getOneUser)
-
-router
-  .route("/:userId")
-  .get(users.getOneUser)
 
 router
   .route("/register")
@@ -24,8 +19,8 @@ router
 .post(users.Login)
   
 router
-  .route("/me",tokenMiddleware)
-  .get(users.getUserMe)
+  .route("/me")
+  .get(tokenMiddleware, users.getUserMe)
   .put(users.updateUserMe)
   .delete(users.deleteUserMe)
 
@@ -33,6 +28,9 @@ router
   .route("me/avatar",tokenMiddleware,multer({storage:saveToUser}).single('avatar'))
   .post(users.uploadAvatar)
 
+router
+  .route("/:userId")
+  .get(users.getOneUser)
 
 //routes for google logins
 // authorsRouter.get("/googleLogin", passport.authenticate("google", { scope: ["profile", "email"] }))
