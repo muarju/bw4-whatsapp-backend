@@ -10,6 +10,23 @@ router
   .route("/")
   .get(users.getAll)
 
+
+//routes for google logins
+// authorsRouter.get("/googleLogin", passport.authenticate("google", { scope: ["profile", "email"] }))
+
+// authorsRouter.get("/googleRedirect", passport.authenticate("google"), async (req, res, next) => {
+//   try {
+//     console.log("redirect")
+//     console.log(req.user)
+//     res.cookie("token", req.user.token, {
+//       httpOnly: true,
+//     })
+//     res.redirect(`http://localhost:3000`)
+//   } catch (error) {
+//     next(error)
+//   }
+// })
+  
 router
   .route("/register")
   .post(users.create)
@@ -31,22 +48,6 @@ router
 router
   .route("/:userId")
   .get(users.getOneUser)
-
-//routes for google logins
-// authorsRouter.get("/googleLogin", passport.authenticate("google", { scope: ["profile", "email"] }))
-
-// authorsRouter.get("/googleRedirect", passport.authenticate("google"), async (req, res, next) => {
-//   try {
-//     console.log("redirect")
-//     console.log(req.user)
-//     res.cookie("token", req.user.token, {
-//       httpOnly: true,
-//     })
-//     res.redirect(`http://localhost:3000`)
-//   } catch (error) {
-//     next(error)
-//   }
-// })
 
 
 export default router
