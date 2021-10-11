@@ -1,14 +1,14 @@
-PORT
+PORT=3001
 
 ===== DB CONNECTIONS ======
-MONGO_DEV_URL
-MONGO_PROD_URL
-MONGO_TEST_URL
+MONGO_DEV_URL=mongodb+srv://amazonUser:iV6WmDFTwldlso8X@amazondb.lnipb.mongodb.net/whatsAppDB?retryWrites=true&w=majority
+MONGO_PROD_URL=mongodb+srv://amazonUser:iV6WmDFTwldlso8X@amazondb.lnipb.mongodb.net/whatsAppDB?retryWrites=true&w=majority
+MONGO_TEST_URL=mongodb+srv://amazonUser:iV6WmDFTwldlso8X@amazondb.lnipb.mongodb.net/whatsAppDB?retryWrites=true&w=majority
 
-CLOUDINARY_URL
+CLOUDINARY_URL=cloudinary://488187838637344:U9uvt7fRpyQj5H7HgCszzsahw2w@djm1hfijq
 
 
 ======= For deployment trustable origins =======
-FE_DEV_TRUST_URL
-FE_PROD_TRUST_URL
-FE_PROD_TRUST_URL_2
+FE_DEV_TRUST_URL=http://localhost:3000
+FE_PROD_TRUST_URL=http://localhost:3000
+FE_PROD_TRUST_URL_2=http://localhost:3000

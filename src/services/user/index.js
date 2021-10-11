@@ -6,7 +6,7 @@ const router = express.Router()
 
 router
   .route("/")
-  .get(users.getAll)
+  .get(users.getUsers)
 
 router
   .route("/register")
@@ -17,10 +17,13 @@ router
   
 router
   .route("/me")
-  .get(users.getSingle)
-  .put(users.update)
-  .delete(users.deleteSingle)
+  .get(users.getUserMe)
+  .put(users.updateUserMe)
+  .delete(users.deleteUserMe)
 
+router
+  .route("me/avatar")
+  .put(users.uploadAvatar)
 
 
 //routes for google logins
