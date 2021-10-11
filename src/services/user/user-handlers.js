@@ -2,6 +2,7 @@ import UserModel from '../../DB/Schema/User.js'
 import { saveToUser } from '../../lib/cloudinaryTool.js'
 import multer from 'multer'
 
+
 const getUsers = async (req, res, next) => {
   try {
      const users = await UserModel.find()
@@ -41,7 +42,7 @@ const uploadAvatar = (multer({storage:saveToUser}).single('avatar'),async(req, r
    
     const updateUser = await UserModel.findByIdAndUpdate(
       req.user._id,
-      { image: imageUrl },
+      { avatar: imageUrl },
       { new: true }
     )
     res.status(201).send(updateUser)
