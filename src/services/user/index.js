@@ -10,6 +10,10 @@ router
   .get(users.getOneUser)
 
 router
+  .route("/:userId")
+  .get(users.getOneUser)
+
+router
   .route("/register")
   .post(users.create)
 router
