@@ -10,7 +10,7 @@ router
 
 router
   .route("/register")
-  .post(users.create)
+  
 
   
 router
