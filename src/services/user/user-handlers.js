@@ -1,20 +1,29 @@
 import UserModel from '../../DB/Schema/User.js'
 
-const getAll = async (req, res, next) => {
+const getUsers = async (req, res, next) => {
   try {
-    res.status(200).send('insidegetAll')
+     const users = await UserModel.find()
+     res.status(200).send(users)
   } catch (error) {
     next(error)
   }
 }
-const getSingle = async (req, res, next) => {
+const getUserMe = async (req, res, next) => {
+  try {
+    res.send(req.user)
+  } catch (error) {
+    next(error)
+  }
+}
+
+const updateUserMe = async (req, res, next) => {
   try {
   } catch (error) {
     next(error)
   }
 }
 
-const create = async (req, res, next) => {
+const uploadAvatar = async (req, res, next) => {
   try {
 
     const newUser = await UserModel(req.body).save()
@@ -25,30 +34,23 @@ const create = async (req, res, next) => {
   }
 }
 
-const update = async (req, res, next) => {
+const getOneUser = async (req, res, next) => {
   try {
   } catch (error) {
     next(error)
   }
 }
 
-const deleteSingle = async (req, res, next) => {
-  try {
 
-  } catch (error) {
 
-    next(error)
-  }
-}
 
 
 const users = {
-  create: create,
-  getAll: getAll,
-  getSingle: getSingle,
-  update: update,
-  deleteSingle: deleteSingle,
-
+  getUsers:getUsers,
+  getUserMe:getUserMe,
+  updateUserMe,updateUserMe,
+  uploadAvatar:uploadAvatar,
+  getOneUser:getOneUser,
 }
 
 export default users
