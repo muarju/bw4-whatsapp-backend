@@ -1,7 +1,8 @@
 import express from "express"
 import { tokenMiddleware } from "../../auth/tokenMiddleware.js"
 import users from './user-handlers.js'
-
+import multer from 'multer'
+import { saveToUser } from "../../lib/cloudinaryTool.js"
 
 const router = express.Router()
 
@@ -21,7 +22,7 @@ router
   .delete(users.deleteUserMe)
 
 router
-  .route("me/avatar",tokenMiddleware)
-  .put(users.uploadAvatar)
+  .route("me/avatar",tokenMiddleware,multer({storage:saveToUser}).single('avatar'))
+  .post(users.uploadAvatar)
 
 export default router

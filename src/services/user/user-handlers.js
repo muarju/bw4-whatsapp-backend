@@ -1,6 +1,5 @@
 import UserModel from '../../DB/Schema/User.js'
-import { saveToUser } from '../../lib/cloudinaryTool.js'
-import multer from 'multer'
+
 
 
 const getUsers = async (req, res, next) => {
@@ -36,7 +35,7 @@ const deleteUserMe= async (req, res, next) => {
   }
 }
 
-const uploadAvatar = (multer({storage:saveToUser}).single('avatar'),async(req, res, next) => {
+const uploadAvatar = async(req, res, next) => {
   try {
     const imageUrl = req.file.path;
    
@@ -49,7 +48,7 @@ const uploadAvatar = (multer({storage:saveToUser}).single('avatar'),async(req, r
   } catch (error) {
     next(error)
   }
-})
+}
 
 const getOneUser = async (req, res, next) => {
   try {
