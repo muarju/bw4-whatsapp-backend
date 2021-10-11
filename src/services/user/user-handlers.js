@@ -2,7 +2,8 @@ import UserModel from '../../DB/Schema/User.js'
 
 const getAll = async (req, res, next) => {
   try {
-    res.status(200).send('insidegetAll')
+    const users = await UserModel.find({})
+    res.status(200).send(users)
   } catch (error) {
     next(error)
   }
@@ -41,6 +42,25 @@ const deleteSingle = async (req, res, next) => {
   }
 }
 
+const checkLogin = async (req, res, next) => {
+  try {
+    const { email, password } = req.body
+    console.log(email, password, 'From check login')
+    const user = await User.checkCredentials(email, password)
+
+    if (user) {
+   
+    
+
+      res.send()
+    } else {
+  
+      next(createHttpError(401, "Credentials are not ok!"))
+    }
+  } catch (error) {
+    next(error)
+  }
+}
 
 const users = {
   create: create,
@@ -48,7 +68,7 @@ const users = {
   getSingle: getSingle,
   update: update,
   deleteSingle: deleteSingle,
-
+  Login:checkLogin,
 }
 
 export default users
