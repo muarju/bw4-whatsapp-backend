@@ -4,14 +4,19 @@ import cors from "cors"
 import connectToDB from '../DB/conn/index.js'
 import userRouters from '../services/user/index.js'
 import { connectSocket } from "../socket/index.js"
-
+import passport from "passport"
+import GoogleStrategy from "../auth/oauth.js"
 
 const {corsConfig, errorHandlers} = lib
 
 export const server = express()
 server.use(express.json())
+
+passport.use("google", GoogleStrategy)
+
 server.use(cors(corsConfig))
 
+server.use(passport.initialize())
 server.use("/user", userRouters)
 
 
@@ -29,6 +34,7 @@ server.use(errorHandlers.server)
 //This will prevent the code below to run in test environment
 
 connectSocket(server)
+
 if((process.env.MONGO_DEV_URL) || (process.env.MONGO_PROD_URL)){
     console.log("DB conn server!!!!!")
     connectToDB()
@@ -36,4 +42,3 @@ if((process.env.MONGO_DEV_URL) || (process.env.MONGO_PROD_URL)){
         console.log("🚀 Server is crashed due to ", error)
     )
 } 
-
