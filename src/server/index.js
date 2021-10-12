@@ -6,6 +6,7 @@ import userRouters from '../services/user/index.js'
 import { connectSocket } from "../socket/index.js"
 import passport from "passport"
 import GoogleStrategy from "../auth/oauth.js"
+import cookieParser from "cookie-parser"
 
 const {corsConfig, errorHandlers} = lib
 
@@ -13,12 +14,11 @@ export const server = express()
 server.use(express.json())
 
 passport.use("google", GoogleStrategy)
-
+server.use(cookieParser())
 server.use(cors(corsConfig))
 
 server.use(passport.initialize())
 server.use("/user", userRouters)
-
 
 
 server.use(errorHandlers.forbidden)
