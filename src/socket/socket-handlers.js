@@ -6,6 +6,9 @@ const example = (payload) => {
     socket.emit("fromExample")
     socket.broadcast.emit("fromExample")
 }
+//create room
+//sendMessage
+//
 
 const socketHandlers = {
     example:example
