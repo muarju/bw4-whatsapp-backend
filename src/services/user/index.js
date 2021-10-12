@@ -26,8 +26,9 @@ router
   .delete(tokenMiddleware,users.deleteUserMe)
   
   router
-  .route("me/avatar",tokenMiddleware,multer({storage:saveToUser}).single('avatar'))
-  .post(users.uploadAvatar)
+  .route("/me/avatar")
+  .post(tokenMiddleware,multer({storage:saveToUser}).single('avatar'),users.uploadAvatar)
+
   
   router
     .route("/:userId")

@@ -52,7 +52,7 @@ const deleteUserMe= async (req, res, next) => {
 const uploadAvatar = async(req, res, next) => {
   try {
     const imageUrl = req.file.path;
-   
+    console.log(imageUrl)
     const updateUser = await UserModel.findByIdAndUpdate(
       req.user._id,
       { avatar: imageUrl },
