@@ -80,6 +80,11 @@ const checkLogin = async (req, res, next) => {
 
     if (user) {
       const token = await generateJWTToken(user)
+      res.cookie("token", req.user.token, {
+        httpOnly: true,
+      })
+      res.setHeader('Access-Control-Allow-Origin', process.env.FE_DEV_TRUST_URL);
+      res.setHeader('Access-Control-Allow-Credentials',true);
       res.status(200).send(token)
     } else {
   
