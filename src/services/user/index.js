@@ -44,13 +44,6 @@ router
   .put(users.updateUserMe)
   .delete(users.deleteUserMe)
 
-router
-  .route("me/avatar",tokenMiddleware,multer({storage:saveToUser}).single('avatar'))
-  .post(users.uploadAvatar)
-
-router
-  .route("/:userId")
-  .get(users.getOneUser)
 
 
 export default router

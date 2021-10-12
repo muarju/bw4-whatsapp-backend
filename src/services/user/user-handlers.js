@@ -1,6 +1,4 @@
 import UserModel from '../../DB/Schema/User.js'
-import { saveToUser } from '../../lib/cloudinaryTool.js'
-import multer from 'multer'
 import {generateJWTToken} from '../../auth/tokenTools.js'
 
 const getUsers = async (req, res, next) => {
@@ -27,7 +25,8 @@ const create = async (req, res, next) => {
 
 const getUserMe = async (req, res, next) => {
   try {
-    res.send(req.user)
+    console.log(req.user)
+    await res.send(req.user)
   } catch (error) {
     next(error)
   }
@@ -44,7 +43,7 @@ const updateUserMe = async (req, res, next) => {
 const deleteUserMe= async (req, res, next) => {
   try {
     const updateUser = await UserModel.findByIdAndDelete(req.user._id)
-    res.send(updateUser.id,"has been deleted successfully")
+    res.send("deleted successfully")
   } catch (error) {
     next(error)
   }
@@ -53,7 +52,7 @@ const deleteUserMe= async (req, res, next) => {
 const uploadAvatar = async(req, res, next) => {
   try {
     const imageUrl = req.file.path;
-   
+    console.log(imageUrl)
     const updateUser = await UserModel.findByIdAndUpdate(
       req.user._id,
       { avatar: imageUrl },
