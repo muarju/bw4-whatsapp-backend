@@ -10,6 +10,7 @@ export const tokenMiddleware = async(req,res,next)=>{
      try {
             const token = req.headers.authorization.split(" ")[1]
             const decodedToken = await verifyJWTToken(token)
+            console.log(decodedToken._id)
             const user = await UserModel.findById(decodedToken._id)
             if(user){
                 req.user = user

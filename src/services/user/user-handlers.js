@@ -1,4 +1,6 @@
 import UserModel from '../../DB/Schema/User.js'
+import { saveToUser } from '../../lib/cloudinaryTool.js'
+import multer from 'multer'
 import {generateJWTToken} from '../../auth/tokenTools.js'
 
 const getUsers = async (req, res, next) => {
@@ -75,7 +77,6 @@ const getOneUser = async (req, res, next) => {
 const checkLogin = async (req, res, next) => {
   try {
     const { email, password } = req.body
-    console.log(email, password, 'From check login')
     const user = await UserModel.checkCredentials(email, password)
 
     if (user) {
