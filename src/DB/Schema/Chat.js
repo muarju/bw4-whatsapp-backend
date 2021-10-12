@@ -6,7 +6,7 @@ const chatSchema = new Schema(
     {
         members: [{ type: Schema.Types.ObjectId, ref: "Users", required: true }],
         name: { type: String },
-        history: [{ type: Schema.Types.ObjectId, ref: "Message", required: true }],
+        history: [{ type: Schema.Types.ObjectId, ref: "Message" }],
         image: { type: String }
     },
     { timestamps: true }
