@@ -8,7 +8,7 @@ export const tokenMiddleware = async(req,res,next)=>{
         if(!req.headers.cookie){
             next(createHttpError(401,'please provide credentials'))
         }else{
-            const token = req.headers.cookie.split("=")[1]
+            const token = req.headers.cookie.split("token=")[1]
             const decodedToken = await verifyJWTToken(token)
             const user = await UserModel.findById(decodedToken._id)
             if(user){
