@@ -4,7 +4,7 @@ const getChatsbyUser = async (req, res, next) => {
   try {
     const chats = await ChatModel.find({
         members: { $in: [req.params.userId] }
-    })
+    }).populate('members').populate('history')
     res.status(200).send(chats)
   } catch (error) {
     next(error)
@@ -13,7 +13,7 @@ const getChatsbyUser = async (req, res, next) => {
 
 const getSingleChat = async (req, res, next) => {
     try {
-      const chat = await ChatModel.findByIdy(req.params.chatId)
+      const chat = await ChatModel.findById(req.params.chatId)
       res.status(200).send(chat)
     } catch (error) {
       next(error)

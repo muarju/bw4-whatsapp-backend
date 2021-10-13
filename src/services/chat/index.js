@@ -18,9 +18,6 @@ router
   
 router
   .route("/imageUpload/:chatId")
-  .get(tokenMiddleware, chats.uploadImage)
-
-  .route("/imageUpload")
-  .get(tokenMiddleware,multer({ storage: saveToChat }).single("cover"), chats.uploadImage)
+  .put(tokenMiddleware, multer({ storage: saveToChat }).single("image"), chats.uploadImage)
 
 export default router

@@ -9,7 +9,7 @@ const router = express.Router()
 
 router
   .route("/")
-  .get(users.getAll)
+  .get(tokenMiddleware, users.getAll)
 
 
 // routes for google logins
@@ -41,12 +41,12 @@ router
 router
   .route("/me")
   .get(tokenMiddleware, users.getUserMe)
-  .put(users.updateUserMe)
-  .delete(users.deleteUserMe)
+  .put(tokenMiddleware, users.updateUserMe)
+  .delete(tokenMiddleware, users.deleteUserMe)
 
 router
   .route("/me/imageUpload")
-  .get(tokenMiddleware,multer({ storage: saveToUser }).single("cover"), users.uploadAvatar)
+  .put(tokenMiddleware,multer({ storage: saveToUser }).single("avatar"), users.uploadAvatar)
 
   
 
