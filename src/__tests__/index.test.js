@@ -2,9 +2,6 @@ import dotenv from "dotenv"
 import mongoose from "mongoose"
 import tests from './tests-handlers.js'
 
-
-
-
 dotenv.config()
 
 

@@ -1,3 +1,6 @@
+import supertest from "supertest"
+import {server} from "../server/index.js"
+const request = supertest(server)
 const validMe = {
         name: 'JestUser',
         surname: "JestSurname",
@@ -41,7 +44,7 @@ const validUserLogin = async() =>{
 
 const invalidUserLogin = async() =>{
     const response = await request.post('/user/login').send(invalidLogin)
-    expect(response.status).toBe(404)
+    expect(response.status).toBe(401)
 }
 
 const getUserMe = async() =>{
@@ -51,12 +54,24 @@ const getUserMe = async() =>{
 const updateUserMe = async() =>{
     const response = await request.put('/user/me')
     expect(response.body).toEqual(validMe)
+    expect(response.status).toBe(200)
     expect(typeof response.body.name,response.body.email,response.body.password).toBe('string')
 }
 const deleteUserMe = async() =>{
     const response = await request.delete('/user/me')
     expect(response.status).toBe(204)
 }
+
+const oneUserId = async() =>{
+    const idResponse = await request.get('/user/userId')
+    expect(response.status).toBe(200)
+    expect(idResponse.body.name).toEqual(validUser.name)
+}
+const noUserId = async() =>{
+    const response = await request.get('/user/userId')
+    expect(response.status).toBe(404)
+}
+// expect(response.body.message).toBe('test unsuccessful')
 
 const tests = {
     userCreation:validUserCreation,
@@ -65,7 +80,9 @@ const tests = {
     invalidUserLogin:invalidUserLogin,
     getUserMe:getUserMe,
     updateUserMe:updateUserMe,
-    deleteUserMe:deleteUserMe
+    deleteUserMe:deleteUserMe,
+    oneUserId:oneUserId,
+    noUserId:noUserId,
 }
 
 export default tests
