@@ -61,7 +61,6 @@ const deleteUserMe = async() =>{
     const response = await request.delete('/user/me')
     expect(response.status).toBe(204)
 }
-
 const oneUserId = async() =>{
     const idResponse = await request.get('/user/userId')
     expect(response.status).toBe(200)
@@ -71,7 +70,6 @@ const noUserId = async() =>{
     const response = await request.get('/user/userId')
     expect(response.status).toBe(404)
 }
-// expect(response.body.message).toBe('test unsuccessful')
 
 const tests = {
     userCreation:validUserCreation,
