@@ -1,4 +1,23 @@
-//get- chat by current user_id
-//delete- the chat
-//put- chat to change chat name 
-//put- chat to change image
+import express from "express"
+import { tokenMiddleware } from "../../auth/tokenMiddleware.js"
+import chats from "./chat-handlers.js"
+import multer from 'multer'
+import { saveToChat } from "../../lib/cloudinaryTool.js"
+
+const router = express.Router()
+
+router
+  .route("/:chatId")
+  .get(tokenMiddleware, chats.getSingleChat)
+  .put(tokenMiddleware, chats.updateChat)
+  .delete(tokenMiddleware, chats.deleteChat)
+
+router
+  .route("/chatbyuser/:userId")
+  .get(tokenMiddleware, chats.getChatsbyUser)
+  
+router
+  .route("/imageUpload/:chatId")
+  .put(tokenMiddleware, multer({ storage: saveToChat }).single("image"), chats.uploadImage)
+
+export default router

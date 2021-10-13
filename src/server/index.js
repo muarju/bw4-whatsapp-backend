@@ -3,6 +3,7 @@ import lib from "../lib/index.js"
 import cors from "cors"
 import connectToDB from '../DB/conn/index.js'
 import userRouters from '../services/user/index.js'
+import chatRouters from '../services/chat/index.js'
 import { connectSocket } from "../socket/index.js"
 import passport from "passport"
 import GoogleStrategy from "../auth/oauth.js"
@@ -19,7 +20,7 @@ server.use(cors(corsConfig))
 
 server.use(passport.initialize())
 server.use("/user", userRouters)
-
+server.use("/chat", chatRouters)
 
 server.use(errorHandlers.forbidden)
 server.use(errorHandlers.notFound)
