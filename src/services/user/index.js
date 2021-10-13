@@ -44,6 +44,10 @@ router
   .put(users.updateUserMe)
   .delete(users.deleteUserMe)
 
+router
+  .route("/me/imageUpload")
+  .get(tokenMiddleware,multer({ storage: saveToUser }).single("cover"), users.uploadAvatar)
 
+  
 
 export default router
