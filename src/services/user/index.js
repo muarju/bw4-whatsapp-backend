@@ -48,6 +48,8 @@ router
   .route("/me/imageUpload")
   .put(tokenMiddleware,multer({ storage: saveToUser }).single("avatar"), users.uploadAvatar)
 
-  
+router.get('/logout', (req, res) => {
+    res.clearCookie('token').status(200).send();
+   });
 
 export default router
