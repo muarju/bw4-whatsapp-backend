@@ -17,21 +17,25 @@ export const connectSocket = (server) => {
 
 
         io.on('connection', socket => {
-            console.log(socket.id)
+            // console.log(socket.id)
 
         socket.on("example", socketHandlers.example)
 
         socket.on("createRoom",async (payload) => {
+            console.log('createRoommmmm on back-end')
             const newChat = new Chat({members: payload})
             const newlyCreatedRoom = await newChat.save({new: true})
-            const room=newlyCreatedRoom._id
+            const room = newlyCreatedRoom._id
+            const newRoomPopulated = await Chat.findById(room)
+            .populate('members')
             socket.join(room)
-            socket.emit("roomCreated", newlyCreatedRoom)
+            socket.emit("roomCreated", newRoomPopulated)
         })
 
 
         socket.on("newMessage",async (payload) => {
          try {
+             console.log(payload, 'FROM NEW MESSAGE LINE 38')
             const {message,userId,roomId}=payload
             const messageObject={
                 sender:userId,
@@ -45,7 +49,7 @@ export const connectSocket = (server) => {
             const newMessageId = saveMessage._id.toString()
             const updateChat = await Chat.findByIdAndUpdate(roomId,{$push:{history: newMessageId}},{new:true})
             console.log('adding new messageid to history',updateChat)
-            socket.emit('UpdateChatHistory',updateChat)
+            socket.emit('UpdateChatHistory', saveMessage)
             }
 
          } catch (error) {

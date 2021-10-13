@@ -7,17 +7,18 @@ import { saveToChat } from "../../lib/cloudinaryTool.js"
 const router = express.Router()
 
 router
+  .route("/chatByUser")
+  .get(tokenMiddleware, chats.getChatsbyUser)
+  
+  router
+  .route("/imageUpload/:chatId")
+  .put(tokenMiddleware, multer({ storage: saveToChat }).single("image"), chats.uploadImage)
+  
+router
   .route("/:chatId")
   .get(tokenMiddleware, chats.getSingleChat)
   .put(tokenMiddleware, chats.updateChat)
   .delete(tokenMiddleware, chats.deleteChat)
 
-router
-  .route("/chatbyuser/:userId")
-  .get(tokenMiddleware, chats.getChatsbyUser)
-  
-router
-  .route("/imageUpload/:chatId")
-  .put(tokenMiddleware, multer({ storage: saveToChat }).single("image"), chats.uploadImage)
 
 export default router
