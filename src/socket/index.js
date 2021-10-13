@@ -4,8 +4,12 @@ import socketHandlers from './socket-handlers.js';
 import express from "express"
 import Chat from '../DB/Schema/Chat.js'
 import Message from '../DB/Schema/Message.js'
+import Users from '../DB/Schema/User.js'
 
 const app = express()
+
+
+let onlineUsers=[]
 
 export const connectSocket = (server) => {
     try {
@@ -19,23 +23,51 @@ export const connectSocket = (server) => {
         io.on('connection', socket => {
             // console.log(socket.id)
 
+            socket.on('joinRooms', async (payload)=>{
+                const newOnlineUser={
+                    loggedUserId: payload,
+                    socketId: socket.id
+                }
+                onlineUsers.push(newOnlineUser)
+
+                const chats = await Chat.find({
+                    members: { $in: [payload] }})
+                    socket.join(payload)
+                    chats.forEach(chat=> {socket.join(chat._id.toString())
+                    })
+                
+                })
+
         socket.on("example", socketHandlers.example)
 
         socket.on("createRoom",async (payload) => {
-            console.log('createRoommmmm on back-end')
             const newChat = new Chat({members: payload})
             const newlyCreatedRoom = await newChat.save({new: true})
             const room = newlyCreatedRoom._id
             const newRoomPopulated = await Chat.findById(room)
             .populate('members')
-            socket.join(room)
+
+            // console.log(onlineUsers)
+            // console.log(payload, '<<<<<<<payload')
+            // const receiver = onlineUsers.filter(onlineUser=> onlineUser.loggedUserId === payload[0])[0]
+            // console.log(receiver)
+            // socket.connected[receiver.socketId].join(room.toString());
+            
+            socket.join(room.toString())
             socket.emit("roomCreated", newRoomPopulated)
+            // socket.to(room.toString()).emit("roomCreated", newRoomPopulated)
+            socket.to(payload[0]).emit("roomCreated", newRoomPopulated)
         })
 
+        socket.on('updateChatMessagesToTheReceiver', async (payload)=>{
+            const updateChat = await Chat.findById(payload)
+        
+            socket.to(updateChat._id.toString()).emit('sendAllChatMessages', updatedChat)
+
+        })
 
         socket.on("newMessage",async (payload) => {
          try {
-             console.log(payload, 'FROM NEW MESSAGE LINE 38')
             const {message,userId,roomId}=payload
             const messageObject={
                 sender:userId,
@@ -48,8 +80,8 @@ export const connectSocket = (server) => {
             if(saveMessage){
             const newMessageId = saveMessage._id.toString()
             const updateChat = await Chat.findByIdAndUpdate(roomId,{$push:{history: newMessageId}},{new:true})
-            console.log('adding new messageid to history',updateChat)
-            socket.emit('UpdateChatHistory', saveMessage)
+            socket.emit('UpdateChatHistory', saveMessage) //for the sender
+            socket.to(roomId).emit('UpdateChatHistory', saveMessage) //for the receiver
             }
 
          } catch (error) {
