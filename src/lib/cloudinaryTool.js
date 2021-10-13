@@ -9,3 +9,9 @@ export const saveToUser = new CloudinaryStorage({
         folder: 'whatsapp/user'
     }
 })
+export const saveToChat = new CloudinaryStorage({
+    cloudinary,
+    params:{
+        folder: 'whatsapp/chat'
+    }
+})
