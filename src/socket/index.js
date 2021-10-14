@@ -9,7 +9,7 @@ import Users from '../DB/Schema/User.js'
 const app = express()
 
 
-let onlineUsers=[]
+let onlineUsers = []
 
 export const connectSocket = (server) => {
     try {
@@ -18,108 +18,123 @@ export const connectSocket = (server) => {
         httpServer.listen(process.env.PORT, () => {
             console.log(`Server listening on port ${process.env.PORT}`)
         })
-
-
         io.on('connection', socket => {
-            console.log(onlineUsers.length, 'Users after connection')
-            // console.log(socket.id)
 
-            socket.on('joinRooms', async (payload)=>{
-                const newOnlineUser={
-                    loggedUserId: payload,
+            socket.on('joinPreExistingRooms', async (payload) => {
+                const newOnlineUser = {
+                    loggedUserId: payload.toString(),
                     socketId: socket.id
                 }
                 onlineUsers.push(newOnlineUser)
-
-                const chats = await Chat.find({
-                    members: { $in: [payload] }})
-                    socket.join(payload)
-                    chats.forEach(chat=> {socket.join(chat._id.toString())
-                    })
-                
+                const chats = await Chat.find({ members: { $in: [payload] } })
+                chats.forEach(chat => {
+                    socket.join(chat._id.toString())
                 })
+                socket.join(payload.toString())
+                console.log(onlineUsers.length, 'Online on join')
+            })
 
-        socket.on("example", socketHandlers.example)
+            // socket.on('joinRooms', async (payload) => {
+            //     const newOnlineUser = {
+            //         loggedUserId: payload,
+            //         socketId: socket.id
+            //     }
+            //     onlineUsers.push(newOnlineUser)
+            //     console.log(onlineUsers.length, 'Users join room')
 
-        socket.on("createRoom",async (payload) => {
-            const newChat = new Chat({members: payload})
-            const newlyCreatedRoom = await newChat.save({new: true})
-            const room = newlyCreatedRoom._id
-            const newRoomPopulated = await Chat.findById(room)
-            .populate('members')
+            //     const chats = await Chat.find({
+            //         members: { $in: [payload] }
+            //     })
+            //     socket.join(payload)
+            //     chats.forEach(chat => {
+            //         socket.join(chat._id.toString())
+            //     })
 
-            // console.log(onlineUsers)
-            // console.log(payload, '<<<<<<<payload')
-            // const receiver = onlineUsers.filter(onlineUser=> onlineUser.loggedUserId === payload[0])[0]
-            // console.log(receiver)
-            // socket.connected[receiver.socketId].join(room.toString());
-            
-            socket.join(room.toString())
-            socket.emit("roomCreated", newRoomPopulated)
-            console.log(onlineUsers, 'From createRoom')
-            // socket.to(room.toString()).emit("roomCreated", newRoomPopulated)
-            socket.to(payload[0]).emit("roomCreated", newRoomPopulated)
-        })
+            // })
 
-        socket.on('updateChatMessagesToTheReceiver', async (payload)=>{
-            const updateChat = await Chat.findById(payload)
-        
-            socket.to(updateChat._id.toString()).emit('sendAllChatMessages', updatedChat)
 
-        })
+            socket.on("createRoom", async (payload) => {
 
-        socket.on("newMessage",async (payload) => {
-         try {
-            const {message,userId,roomId}=payload
-            const messageObject={
-                sender:userId,
-                content:{
-                    text: message,
+                const existentRoom = await Chat.find({ members: { $all: payload } })
+                if (existentRoom.length > 0) {
+                    console.log('inside if existent room')
+                    return socket.emit('existentRoom')
+                } else {
+                    const newChat = new Chat({ members: payload })
+                    const newlyCreatedRoom = await newChat.save({ new: true })
+                    const roomID = newlyCreatedRoom._id.toString()
+                    const newRoomPopulated = await Chat.findById(roomID)
+                        .populate('members')
+                    // Join room for sender
+                    socket.join(roomID)
+
+                    //Join room for receiver
+                    const receiverOn = onlineUsers.find(onlineUser => onlineUser.loggedUserId === payload[0].toString())
+                    console.log(receiverOn.socketId, 'receiver socketID')
+                    
+                    socket.emit('NewRoomCreated', newRoomPopulated )
+                    socket.to(receiverOn.loggedUserId).emit('NewRoomCreated',newRoomPopulated)
                 }
-            }
-            const newMessage=new Message(messageObject)
-            const saveMessage=await newMessage.save({new: true})
-            if(saveMessage){
-            const newMessageId = saveMessage._id.toString()
-            const updateChat = await Chat.findByIdAndUpdate(roomId,{$push:{history: newMessageId}},{new:true})
-            socket.emit('UpdateChatHistory', saveMessage) //for the sender
-            socket.to(roomId).emit('UpdateChatHistory', saveMessage) //for the receiver
-            }
+            })
 
-         } catch (error) {
-             console.log(error)
-         }
-           
+            // socket.on('updateChatMessagesToTheReceiver', async (payload) => {
+            //     const updateChat = await Chat.findById(payload)
+
+            //     socket.to(updateChat._id.toString()).emit('sendAllChatMessages', updatedChat)
+
+            // })
+
+            socket.on("newMessage", async (payload) => {
+                try {
+                    const { message, userId, roomId } = payload
+                    const messageObject = {
+                        sender: userId,
+                        content: {
+                            text: message,
+                        }
+                    }
+                    const newMessage = new Message(messageObject)
+                    const saveMessage = await newMessage.save({ new: true })
+                    if (saveMessage) {
+                        const newMessageId = saveMessage._id.toString()
+                        const updateChat = await Chat.findByIdAndUpdate(roomId, { $push: { history: newMessageId } }, { new: true })
+                        // socket.to().emit('UpdateChatHistory', saveMessage) //for the sender
+                        socket.to(roomId).emit('UpdateChatHistory', saveMessage) //for the receiver
+                    }
+
+                } catch (error) {
+                    console.log(error)
+                }
+
+            })
+
+            socket.on("deleteMessage", async (payload) => {
+                const { roomId, messageId } = payload
+                try {
+                    const updateChat = await Chat.findByIdAndUpdate(roomId, { $pull: { history: messageId } }, { new: true })
+                    const deleteFromMessage = await Message.findByIdAndDelete(messageId)
+                    socket.emit('UpdateChatHistory', updateChat)
+
+                } catch (error) {
+                    console.log(error)
+                }
+
+
+            })
+
+            socket.on('forceDisconnect', () => {
+                onlineUsers = onlineUsers.filter(onlineUser => onlineUser.socketId !== socket.id)
+                console.log(onlineUsers.length, 'from forceDC')
+
+            })
+            socket.on("disconnect", () => {
+                onlineUsers = onlineUsers.filter(onlineUser => onlineUser.socketId !== socket.id)
+                console.log(onlineUsers.length, 'from disconnect')
+            })
+
         })
 
-        socket.on("deleteMessage",async (payload) => {
-            const {roomId, messageId} = payload
-            try {
-                const updateChat = await Chat.findByIdAndUpdate(roomId,{$pull:{history: messageId}},{new:true})
-                const deleteFromMessage=await Message.findByIdAndDelete(messageId)
-                socket.emit('UpdateChatHistory',updateChat)
-   
-            } catch (error) {
-                console.log(error)
-            }
-   
-              
-           })
-        
-        // all cations
-        // all cations join room (to send to that room )
-        // to(will send to specific room)
-        // socket.on (will receive an emit from the Front-end)
-        // socket.emit (will send a command to the Front-end)
-        // socket.broadcast (will send a command to everyone who is connected)
-        socket.on("disconnect", () => {
-            onlineUsers.filter(onlineUser=> onlineUser.socketId !== socket.id)
-            console.log(onlineUsers.length, 'Users after DC')
-        })
-        
-        })
 
-        
     } catch (error) {
         console.log(error)
     }
