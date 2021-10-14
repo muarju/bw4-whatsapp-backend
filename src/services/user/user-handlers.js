@@ -2,6 +2,7 @@ import UserModel from '../../DB/Schema/User.js'
 import { saveToUser } from '../../lib/cloudinaryTool.js'
 import multer from 'multer'
 import {generateJWTToken} from '../../auth/tokenTools.js'
+import createHttpError from 'http-errors'
 
 const getUsers = async (req, res, next) => {
   try {
