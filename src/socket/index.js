@@ -21,6 +21,7 @@ export const connectSocket = (server) => {
 
 
         io.on('connection', socket => {
+            console.log(onlineUsers.length, 'Users after connection')
             // console.log(socket.id)
 
             socket.on('joinRooms', async (payload)=>{
@@ -55,6 +56,7 @@ export const connectSocket = (server) => {
             
             socket.join(room.toString())
             socket.emit("roomCreated", newRoomPopulated)
+            console.log(onlineUsers, 'From createRoom')
             // socket.to(room.toString()).emit("roomCreated", newRoomPopulated)
             socket.to(payload[0]).emit("roomCreated", newRoomPopulated)
         })
@@ -111,7 +113,8 @@ export const connectSocket = (server) => {
         // socket.emit (will send a command to the Front-end)
         // socket.broadcast (will send a command to everyone who is connected)
         socket.on("disconnect", () => {
-            socket.broadcast.emit("UpdateTotalUsers")
+            onlineUsers.filter(onlineUser=> onlineUser.socketId !== socket.id)
+            console.log(onlineUsers.length, 'Users after DC')
         })
         
         })

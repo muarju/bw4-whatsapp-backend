@@ -1,7 +1,6 @@
 import ChatModel from '../../DB/Schema/Chat.js'
 
 const getChatsbyUser = async (req, res, next) => {
-  console.log('from getChatssssssssssssssssssss')
   try {
     const chats = await ChatModel.find({
         members: { $in: [req.user.id] }
