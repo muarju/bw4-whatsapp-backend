@@ -6,7 +6,6 @@ import Chat from '../DB/Schema/Chat.js'
 import Message from '../DB/Schema/Message.js'
 import Users from '../DB/Schema/User.js'
 
-const app = express()
 
 
 let onlineUsers = []
@@ -30,28 +29,10 @@ export const connectSocket = (server) => {
                 chats.forEach(chat => {
                     socket.join(chat._id.toString())
                 })
+                console.log('On login join my own room', payload.toString())
                 socket.join(payload.toString())
                 console.log(onlineUsers.length, 'Online on join')
             })
-
-            // socket.on('joinRooms', async (payload) => {
-            //     const newOnlineUser = {
-            //         loggedUserId: payload,
-            //         socketId: socket.id
-            //     }
-            //     onlineUsers.push(newOnlineUser)
-            //     console.log(onlineUsers.length, 'Users join room')
-
-            //     const chats = await Chat.find({
-            //         members: { $in: [payload] }
-            //     })
-            //     socket.join(payload)
-            //     chats.forEach(chat => {
-            //         socket.join(chat._id.toString())
-            //     })
-
-            // })
-
 
             socket.on("createRoom", async (payload) => {
 
@@ -68,21 +49,23 @@ export const connectSocket = (server) => {
                     // Join room for sender
                     socket.join(roomID)
 
+                    console.log(newRoomPopulated._id.toString(), 'ID send to the FE')
+                    console.log(newlyCreatedRoom._id.toString(), 'ID saved on the DB')
+                 
                     //Join room for receiver
                     const receiverOn = onlineUsers.find(onlineUser => onlineUser.loggedUserId === payload[0].toString())
-                    console.log(receiverOn.socketId, 'receiver socketID')
-                    
-                    socket.emit('NewRoomCreated', newRoomPopulated )
-                    socket.to(receiverOn.loggedUserId).emit('NewRoomCreated',newRoomPopulated)
+                   console.log(receiverOn, 'ReceiverON <<<<<<<<<<<')
+                   console.log(payload, "<payload")
+
+                    if(receiverOn){
+                        socket.emit('NewRoomCreated', newRoomPopulated)
+                        // console.log('when both users are on', '==>>ReceiverID', receiverOn)
+                        return socket.broadcast.to(receiverOn.loggedUserId).emit('NewRoomCreated',newRoomPopulated)
+                    } else {
+                        socket.emit('NewRoomCreated', newRoomPopulated)
+                    }      
                 }
             })
-
-            // socket.on('updateChatMessagesToTheReceiver', async (payload) => {
-            //     const updateChat = await Chat.findById(payload)
-
-            //     socket.to(updateChat._id.toString()).emit('sendAllChatMessages', updatedChat)
-
-            // })
 
             socket.on("newMessage", async (payload) => {
                 try {
