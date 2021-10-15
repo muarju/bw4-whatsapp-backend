@@ -21,7 +21,7 @@ const create = async (req, res, next) => {
     res.cookie("token", token, {
       httpOnly: true,
     })
-    res.status(200).send(token)
+    res.status(201).send(token)
   } catch (error) {
     res.status(500)
     console.log(error)
