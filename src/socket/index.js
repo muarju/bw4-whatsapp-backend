@@ -76,7 +76,7 @@ export const connectSocket = (server) => {
                         const newMessageId = saveMessage._id.toString()
                         const updateChat = await Chat.findByIdAndUpdate(roomId, { $push: { history: newMessageId } }, { new: true })
                         // socket.to().emit('UpdateChatHistory', saveMessage) //for the sender
-                        socket.to(roomId).emit('UpdateChatHistory', saveMessage) //for the receiver
+                        socket.to(roomId).emit('UpdateChatHistory', {roomId, saveMessage}) //for the receiver
                     }
 
                 } catch (error) {
