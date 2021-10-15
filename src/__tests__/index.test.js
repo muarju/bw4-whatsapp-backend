@@ -4,7 +4,7 @@ import tests from './tests-handlers.js'
 import { connectSocket } from "../socket/index.js"
 import {server} from '../server/index.js'
 
-dotenv.config()
+// dotenv.config()
 
 
 describe("Testing the testing environment", () => {
@@ -35,12 +35,12 @@ describe("Testing the server", () => {
         })
     
     it("should test that a POST /user/register is  creating a valid user", tests.userCreation)
-    it("should test that a POST /user/register is  creating an invalid user", tests.invalidUserCreation)
-    it("should test that a POST /user/login is  returning a valid user", tests.validUserLogin)
-    it("should test that a POST /user/login is  returning an invalid user", tests.invalidUserLogin)
-    it("should test that a GET  /user/me is  returning a user", tests.getUserMe)
-    it("should test that a PUT  /user/me is  updating a valid user", tests.updateUserMe)
-    it("should test that a DELETE /user/me is  deleting a user", tests.deleteUserMe) 
+    // it("should test that a POST /user/register is  creating an invalid user", tests.invalidUserCreation)
+    // it("should test that a POST /user/login is  returning a valid user", tests.validUserLogin)
+    // it("should test that a POST /user/login is  returning an invalid user", tests.invalidUserLogin)
+    // it("should test that a GET  /user/me is  returning a user", tests.getUserMe)
+    // it("should test that a PUT  /user/me is  updating a valid user", tests.updateUserMe)
+    // it("should test that a DELETE /user/me is  deleting a user", tests.deleteUserMe) 
 })
 
 
