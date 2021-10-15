@@ -1,5 +1,5 @@
 const example = (payload) => {
-    console.log(payload, 'From Example')
+    // console.log(payload, 'From Example')
     //do what you want here
     //save, search emit, if/else 
 

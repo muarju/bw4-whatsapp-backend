@@ -15,7 +15,7 @@ const googleStrategy = new GoogleStrategy(
   async (accessToken, refreshToken, profile, passportNext) => {
     try {
       // We are receiving some profile information from Google
-      console.log(profile)
+      // console.log(profile)
 
       // 1. Check if user is already in db or not.
 

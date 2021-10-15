@@ -24,7 +24,7 @@ router.get("/googleRedirect", passport.authenticate("google"), async (req, res, 
     })
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     res.setHeader('Access-Control-Allow-Credentials',true);
-    res.redirect(`http://localhost:3000`)
+    res.redirect(`http://localhost:3000/OauthAccess`)
   } catch (error) {
     next(error)
   }
@@ -48,7 +48,9 @@ router
   .route("/me/imageUpload")
   .put(tokenMiddleware,multer({ storage: saveToUser }).single("avatar"), users.uploadAvatar)
 
-  
+router.get('/logout', (req, res) => {
+    res.clearCookie('token').status(200).send();
+   });
 
 
 export default router

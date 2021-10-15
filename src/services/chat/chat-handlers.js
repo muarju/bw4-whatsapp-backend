@@ -3,7 +3,7 @@ import ChatModel from '../../DB/Schema/Chat.js'
 const getChatsbyUser = async (req, res, next) => {
   try {
     const chats = await ChatModel.find({
-        members: { $in: [req.params.userId] }
+        members: { $in: [req.user.id] }
     }).populate('members').populate('history')
     res.status(200).send(chats)
   } catch (error) {
