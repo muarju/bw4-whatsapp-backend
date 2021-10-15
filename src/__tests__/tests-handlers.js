@@ -1,5 +1,5 @@
 import supertest from "supertest"
-import {server} from "../server/index.js"
+import {server} from "../server/serverStart.js"
 
 const request = supertest(server)
 const validMe = {
