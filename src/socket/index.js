@@ -4,6 +4,9 @@ import socketHandlers from './socket-handlers.js';
 import express from "express"
 import Chat from '../DB/Schema/Chat.js'
 import Message from '../DB/Schema/Message.js'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const app = express()
 
@@ -39,7 +42,7 @@ export const connectSocket = (server) => {
                     text: message,
                 }
             }
-            const newMessage=new Message(messageObject)
+            const newMessage= new Message(messageObject)
             const saveMessage=await newMessage.save({new: true})
             if(saveMessage){
             const newMessageId = saveMessage._id.toString()

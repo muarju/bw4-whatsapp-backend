@@ -43,14 +43,13 @@ const updateUserMe = async (req, res, next) => {
     const updateUser = await UserModel.findByIdAndUpdate(req.user._id,req.body,{new:true})
     res.status(200).send(updateUser)
   } catch (error) {
-    res.status(500)
     next(error)
   }
 }
 const deleteUserMe= async (req, res, next) => {
   try {
     const updateUser = await UserModel.findByIdAndDelete(req.user._id)
-    res.status(204).send("deleted successfully")
+    res.status(204).send('deleted')
   } catch (error) {
     next(error)
   }
@@ -85,7 +84,7 @@ const checkLogin = async (req, res, next) => {
   try {
     const { email, password } = req.body
     const user = await UserModel.checkCredentials(email, password)
-
+    
     if (user) {
       const token = await generateJWTToken(user)
       res.cookie("token", token, {
@@ -94,7 +93,7 @@ const checkLogin = async (req, res, next) => {
       res.status(200).send(token)
     } else {
   
-      next(createHttpError(401, "Credentials are not ok!"))
+      next(createHttpError(500, "Credentials are not ok!"))
     }
   } catch (error) {
     res.status(500)

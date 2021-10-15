@@ -1,6 +1,8 @@
 import dotenv from "dotenv"
 import mongoose from "mongoose"
 import tests from './tests-handlers.js'
+import { connectSocket } from "../socket/index.js"
+import {server} from '../server/index.js'
 
 dotenv.config()
 
@@ -14,6 +16,7 @@ describe("Testing the testing environment", () => {
 describe("Testing the server", () => {
 
     beforeAll(done => {
+        // connectSocket(server)
         mongoose.connect(process.env.MONGO_TEST_URL)
             .then(() => {
                 console.log("Connected to Atlas")
