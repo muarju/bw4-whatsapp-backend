@@ -4,6 +4,9 @@ import multer from 'multer'
 import {generateJWTToken} from '../../auth/tokenTools.js'
 import createHttpError from 'http-errors'
 
+
+const cookieAge = 48 * 60 * 60 * 1000
+
 const getUsers = async (req, res, next) => {
   try {
     const users = await UserModel.find({})
@@ -20,6 +23,7 @@ const create = async (req, res, next) => {
     const token = await generateJWTToken(user)
     res.cookie("token", token, {
       httpOnly: true,
+      maxAge: cookieAge
     })
     res.status(201).send(token)
   } catch (error) {
@@ -90,6 +94,7 @@ const checkLogin = async (req, res, next) => {
       const token = await generateJWTToken(user)
       res.cookie("token", token, {
         httpOnly: true,
+        maxAge: cookieAge
       })
       res.status(200).send(token)
     } else {

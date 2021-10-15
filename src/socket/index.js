@@ -30,6 +30,7 @@ export const connectSocket = (server) => {
                     socketId: socket.id
                 }
                 onlineUsers.push(newOnlineUser)
+                console.log(onlineUsers.length, 'Total users ON<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
                 const chats = await Chat.find({ members: { $in: [payload] } })
                 chats.forEach(chat => {
                     socket.join(chat._id.toString())

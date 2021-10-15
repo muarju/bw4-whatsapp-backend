@@ -6,7 +6,7 @@ import { saveToUser } from "../../lib/cloudinaryTool.js"
 import passport from 'passport'
 
 const router = express.Router()
-
+const cookieAge = 48 * 60 * 60 * 1000
 router
   .route("/")
   .get(tokenMiddleware, users.getAll)
@@ -21,6 +21,7 @@ router.get("/googleRedirect", passport.authenticate("google"), async (req, res, 
     // console.log(req.user)
     res.cookie("token", req.user.token, {
       httpOnly: true,
+      maxAge: cookieAge
     })
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     res.setHeader('Access-Control-Allow-Credentials',true);
