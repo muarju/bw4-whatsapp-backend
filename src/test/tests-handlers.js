@@ -30,13 +30,13 @@ const invalidLogin = {
 
 const validUserCreation= async() => {
     const response = await request.post('/user/register').send(validUser)
-    expect(response.status).toBe(201)
+    expect(201)
     // expect(response.body._id).toBeDefined()
 }
 
 const invalidUserCreation = async() =>{
     const response = await request.post('/user/register').send(invalidUser)
-    expect(response.status).toBe(500) 
+    expect(500)
 }
 
 const validUserLogin = async() =>{ 
@@ -46,7 +46,7 @@ const validUserLogin = async() =>{
 
 const invalidUserLogin = async() =>{
     const response = await request.post('/user/login').send(invalidLogin)
-    expect(response.status).toBe(500)
+    expect(500)
 }
 
 const getUserMe = async() =>{
