@@ -38,7 +38,6 @@ export const connectSocket = (server) => {
             })
 
             socket.on("createRoom", async (payload) => {
-
                 const existentRoom = await Chat.find({ members: { $all: payload } })
                 if (existentRoom.length > 0) {
                     return socket.emit('existentRoom')
@@ -51,13 +50,24 @@ export const connectSocket = (server) => {
                     // Join room for sender
                     socket.join(roomID)                 
                     //Join room for receiver
-                    const receiverOn = onlineUsers.find(onlineUser => onlineUser.loggedUserId === payload[0].toString())
-                    if(receiverOn){
-                        socket.emit('NewRoomCreated', newRoomPopulated)
-                        return socket.broadcast.to(receiverOn.loggedUserId).emit('NewRoomCreated',newRoomPopulated)
-                    } else {
-                        socket.emit('NewRoomCreated', newRoomPopulated)
-                    }      
+                    if(newRoomPopulated.members.length>2){
+                        const receiverOn = onlineUsers.filter(onlineUser => onlineUser.loggedUserId === payload[0].toString())
+                        if(receiverOn){
+                            socket.emit('NewRoomCreated', newRoomPopulated)
+                            return socket.broadcast.to(receiverOn.loggedUserId).emit('NewRoomCreated',newRoomPopulated)
+                        } else {
+                            socket.emit('NewRoomCreated', newRoomPopulated)
+                        }   
+                    }else{
+                        const receiverOn = onlineUsers.find(onlineUser => onlineUser.loggedUserId === payload[0].toString())
+                        if(receiverOn){
+                            socket.emit('NewRoomCreated', newRoomPopulated)
+                            return socket.broadcast.to(receiverOn.loggedUserId).emit('NewRoomCreated',newRoomPopulated)
+                        } else {
+                            socket.emit('NewRoomCreated', newRoomPopulated)
+                        }   
+                    }
+                      
                 }
             })
 
