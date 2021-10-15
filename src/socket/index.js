@@ -24,6 +24,7 @@ export const connectSocket = (server) => {
         io.on('connection', socket => {
 
             socket.on('joinPreExistingRooms', async (payload) => {
+                console.log(payload, 'User Log in, should show User ID')
                 const newOnlineUser = {
                     loggedUserId: payload.toString(),
                     socketId: socket.id
