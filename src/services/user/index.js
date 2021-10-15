@@ -17,8 +17,8 @@ router.get("/googleLogin", passport.authenticate("google", { scope: ["profile", 
 
 router.get("/googleRedirect", passport.authenticate("google"), async (req, res, next) => {
   try {
-    console.log("redirect")
-    console.log(req.user)
+    // console.log("redirect")
+    // console.log(req.user)
     res.cookie("token", req.user.token, {
       httpOnly: true,
     })

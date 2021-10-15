@@ -24,7 +24,7 @@ export const connectSocket = (server) => {
         io.on('connection', socket => {
 
             socket.on('joinPreExistingRooms', async (payload) => {
-                console.log(payload, 'User Log in, should show User ID')
+                console.log(payload, 'User Log in, should show USER ID on LOGIN')
                 const newOnlineUser = {
                     loggedUserId: payload.toString(),
                     socketId: socket.id
@@ -78,11 +78,11 @@ export const connectSocket = (server) => {
                     if (payload.length > 2) {
                         const filteredUsers = payload.filter(userID => userID !== payload[0])
                         const receiversOn = onlineUsers.filter(onlineUser => filteredUsers.includes(onlineUser.loggedUserId))
-                        console.log(receiversOn, 'list with all online users from group creation')
+                        // console.log(receiversOn, 'list with all online users from group creation')
                         if (receiversOn.length >= 1) {
 
                             socket.emit('NewRoomCreated', newRoomPopulated)
-                            console.log(receiversOn, 'List of receivers on')
+                            // console.log(receiversOn, 'List of receivers on')
                             receiversOn.forEach(onlineUser => socket.broadcast.to(onlineUser.loggedUserId).emit('NewRoomCreated', newRoomPopulated))
                             return
                         } else {
@@ -128,7 +128,7 @@ export const connectSocket = (server) => {
             socket.on("connectToSelectedRoom", async (payload) => {
                 socket.join(payload)
                 const currentChat = await Chat.findById(payload).populate('history').populate('members')
-                console.log(currentChat, '<<<<<<')
+                
                 if (currentChat) {
                     socket.emit('updateChatRoom', currentChat)
                 }

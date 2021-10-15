@@ -35,7 +35,6 @@ server.use(errorHandlers.server)
 // so when running the test it wont connect to the DB and either will listen the server
 //This will prevent the code below to run in test environment
 
-console.log(process.env.MONGO_DEV_URL, process.env.MONGO_PROD_URL, 'mongo coon url from server folder index.js <<<<<<<<<<<<<<<<<<<<<<,' )
 
 if((process.env.MONGO_DEV_URL) || (process.env.MONGO_PROD_URL)){
     connectSocket(server)
