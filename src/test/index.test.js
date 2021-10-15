@@ -3,6 +3,8 @@ import mongoose from "mongoose"
 import tests from './tests-handlers.js'
 // import { connectSocket } from "../socket/index.js"
 import {server} from '../server/serverStart.js'
+import {createServer} from 'http'
+
 
 dotenv.config()
 
@@ -14,14 +16,14 @@ console.log({
 
 describe("Testing the testing environment", () => {
     it("should test that true is true", () => {
-        expect(true).toBe(true);
+       expect(true).toBe(true);
     })
 })
 
 describe("Testing the server", () => {
 
     beforeAll(done => {
-        // connectSocket(server)
+        // createServer().listen()
        //process MONGO WORKING
         mongoose.connect(process.env.MONGO_TEST_URL)
             .then(() => {
@@ -31,11 +33,12 @@ describe("Testing the server", () => {
     }) 
 
     afterAll(done => {
-        mongoose.connection.dropDatabase().then(() => {
-            console.log("DB dropped, removed testing DB")
-            
-            mongoose.connection.close().then(() => {
-                done()
+        mongoose.connection.dropDatabase()
+             .then(() => {
+                console.log("DB dropped, removed testing DB")
+                
+                mongoose.connection.close().then(() => {
+                    done()
                 })
             })
         })
