@@ -52,4 +52,5 @@ router.get('/logout', (req, res) => {
     res.clearCookie('token').status(200).send();
    });
 
+
 export default router

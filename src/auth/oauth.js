@@ -3,6 +3,11 @@ import passport from "passport"
 import userModel from "../DB/Schema/User.js"
 import jwt from 'jsonwebtoken'
 import {generateJWTToken} from './tokenTools.js'
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+
 
 const googleStrategy = new GoogleStrategy(
   {

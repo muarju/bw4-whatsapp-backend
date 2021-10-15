@@ -32,7 +32,9 @@ const create = async (req, res, next) => {
 const getUserMe = async (req, res, next) => {
   try {
     res.send(req.user)
+    res.status(200)
   } catch (error) {
+    res.status(404)
     next(error)
   }
 }
@@ -40,7 +42,7 @@ const getUserMe = async (req, res, next) => {
 const updateUserMe = async (req, res, next) => {
   try {
     const updateUser = await UserModel.findByIdAndUpdate(req.user._id,req.body,{new:true})
-    res.send(updateUser)
+    res.status(200).send(updateUser)
   } catch (error) {
     next(error)
   }
@@ -48,7 +50,7 @@ const updateUserMe = async (req, res, next) => {
 const deleteUserMe= async (req, res, next) => {
   try {
     const updateUser = await UserModel.findByIdAndDelete(req.user._id)
-    res.send(updateUser.id,"has been deleted successfully")
+    res.status(204).send('deleted')
   } catch (error) {
     next(error)
   }
@@ -72,7 +74,9 @@ const uploadAvatar = async(req, res, next) => {
 const getOneUser = async (req, res, next) => {
   try {
     const oneUser = await UserModel.findById(req.params.userId)
+    res.status(200).send(oneUser)
   } catch (error) {
+    res.status(404)
     next(error)
   }
 }
@@ -81,7 +85,7 @@ const checkLogin = async (req, res, next) => {
   try {
     const { email, password } = req.body
     const user = await UserModel.checkCredentials(email, password)
-
+    
     if (user) {
       const token = await generateJWTToken(user)
       res.cookie("token", token, {
@@ -90,9 +94,10 @@ const checkLogin = async (req, res, next) => {
       res.status(200).send(token)
     } else {
   
-      next(createHttpError(401, "Credentials are not ok!"))
+      next(createHttpError(500, "Credentials are not ok!"))
     }
   } catch (error) {
+    res.status(500)
     next(error)
   }
 }

@@ -1,6 +1,7 @@
 import express from "express"
 import lib from "../lib/index.js"
 import cors from "cors"
+import {server} from './serverStart.js'
 import connectToDB from '../DB/conn/index.js'
 import userRouters from '../services/user/index.js'
 import chatRouters from '../services/chat/index.js'
@@ -11,7 +12,7 @@ import cookieParser from "cookie-parser"
 
 const {corsConfig, errorHandlers} = lib
 
-export const server = express()
+// export const server = express()
 server.use(express.json())
 
 passport.use("google", GoogleStrategy)
@@ -34,9 +35,10 @@ server.use(errorHandlers.server)
 // so when running the test it wont connect to the DB and either will listen the server
 //This will prevent the code below to run in test environment
 
-connectSocket(server)
+console.log(process.env.MONGO_DEV_URL, process.env.MONGO_PROD_URL, 'mongo coon url from server folder index.js <<<<<<<<<<<<<<<<<<<<<<,' )
 
 if((process.env.MONGO_DEV_URL) || (process.env.MONGO_PROD_URL)){
+    connectSocket(server)
     console.log("DB conn server!!!!!")
     connectToDB()
     server.on("error", (error) =>

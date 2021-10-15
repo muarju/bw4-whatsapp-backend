@@ -6,21 +6,25 @@ import Chat from '../DB/Schema/Chat.js'
 import Message from '../DB/Schema/Message.js'
 import Users from '../DB/Schema/User.js'
 import { join } from 'path';
+import {httpServer} from '../server/listen.js'
 
+// import { server } from '../server/index.js';
+// export const httpServer = createServer(server)
 
 
 let onlineUsers = []
 
 export const connectSocket = (server) => {
     try {
-        const httpServer = createServer(server)
+        // const httpServer = createServer(server)
         const io = new Server(httpServer, { allowEIO3: true })
-        httpServer.listen(process.env.PORT, () => {
-            console.log(`Server listening on port ${process.env.PORT}`)
-        })
+        // httpServer.listen(process.env.PORT, () => {
+        //     console.log(`Server listening on port ${process.env.PORT}`)
+        // })
         io.on('connection', socket => {
 
             socket.on('joinPreExistingRooms', async (payload) => {
+                console.log(payload, 'User Log in, should show User ID')
                 const newOnlineUser = {
                     loggedUserId: payload.toString(),
                     socketId: socket.id
